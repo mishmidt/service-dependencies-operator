@@ -13,7 +13,7 @@ spec:
     namespace: test
     kind: sa
   - name: test-role
-    namespace: test
+    namespace: tests
     kind: role
   - name:
     namespace: test
