@@ -1,20 +1,18 @@
-apiVersion: mmontes.io/v1alpha1
-kind: Echo
+apiVersion: io.com/v1
+kind: ServiceDependency
 metadata:
-  name: hello-world
-  namespace: default
+  name: example-service-dependency
 spec:
   service:
-    name: 
-    namespace:
-
-  requirements:
-  - name: test-sa
-    namespace: test
-    kind: sa
-  - name: test-role
-    namespace: tests
-    kind: role
-  - name:
-    namespace: test
-    kind: rb
+    deploymentName: "identity-service"
+    namespace: "wib"
+  dependencies:
+    - kind: "ServiceAccount"
+      name: "secret-creator"
+      namespace: "wib"
+    - kind: "Role"
+      name: "secret-creator-role"
+      namespace: "wib"
+    - kind: "RoleBinding"
+      name: "secret-creator-role-binding"
+      namespace: "wib"
