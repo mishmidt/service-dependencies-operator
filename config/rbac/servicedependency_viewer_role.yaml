@@ -1,0 +1,27 @@
+# permissions for end users to view servicedependencies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: servicedependency-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: service-dependencies-operator
+    app.kubernetes.io/part-of: service-dependencies-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: servicedependency-viewer-role
+rules:
+- apiGroups:
+  - io.io.com
+  resources:
+  - servicedependencies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - io.io.com
+  resources:
+  - servicedependencies/status
+  verbs:
+  - get

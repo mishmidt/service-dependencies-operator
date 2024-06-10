@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- io_v1_servicedependency.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples
