@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -50,7 +51,7 @@ func (r *ServiceDependencyReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
-
+	fmt.Println("Succeeded")
 	return ctrl.Result{}, nil
 }
 
