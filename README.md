@@ -1,91 +1,74 @@
-# service-dependencies-operator
-// TODO(user): Add simple overview of use/purpose
 
-## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+# Service Dependencies Operator
 
-## Getting Started
+## Overview
+The Service Dependencies Operator is a Kubernetes operator designed to ensure that all specified dependencies are present and correctly set up before marking the deployment pods of a service as ready. This operator uses a Custom Resource Definition (CRD) to manage service dependencies across your Kubernetes cluster.
 
-### Prerequisites
-- go version v1.20.0+
-- docker version 17.03+.
-- kubectl version v1.11.3+.
-- Access to a Kubernetes v1.11.3+ cluster.
+## Prerequisites
+- Kubernetes 1.16+
+- Kubectl installed and configured
+- Operator Lifecycle Manager (OLM) for deploying the operator (optional)
 
-### To Deploy on the cluster
-**Build and push your image to the location specified by `IMG`:**
+## Installation
 
-```sh
-make docker-build docker-push IMG=<some-registry>/service-dependencies-operator:tag
+### Install the CRD
+First, you need to install the Custom Resource Definition (CRD) in your Kubernetes cluster:
+
+```bash
+kubectl apply -f crd.yaml
 ```
 
-**NOTE:** This image ought to be published in the personal registry you specified. 
-And it is required to have access to pull the image from the working environment. 
-Make sure you have the proper permission to the registry if the above commands don’t work.
+### Deploy the Operator
+To deploy the Service Dependencies Operator in your cluster, apply the deployment YAML:
 
-**Install the CRDs into the cluster:**
-
-```sh
-make install
+```bash
+kubectl apply -f operator-deployment.yaml
 ```
 
-**Deploy the Manager to the cluster with the image specified by `IMG`:**
+## Usage
 
-```sh
-make deploy IMG=<some-registry>/service-dependencies-operator:tag
+### Creating a ServiceDependency
+To create a ServiceDependency, you need to define it in a YAML file. Below is an example:
+
+```yaml
+apiVersion: io.com/v1
+kind: ServiceDependency
+metadata:
+  name: example-servicedependency
+spec:
+  service:
+    deploymentName: my-service
+    namespace: default
+  dependencies:
+    - kind: Deployment
+      name: dependency1
+      namespace: default
+    - kind: ConfigMap
+      name: config1
+      namespace: default
 ```
 
-> **NOTE**: If you encounter RBAC errors, you may need to grant yourself cluster-admin 
-privileges or be logged in as admin.
+Apply this configuration using kubectl:
 
-**Create instances of your solution**
-You can apply the samples (examples) from the config/sample:
-
-```sh
-kubectl apply -k config/samples/
+```bash
+kubectl apply -f example-servicedependency.yaml
 ```
 
->**NOTE**: Ensure that the samples has default values to test it out.
+## Viewing the Status of Dependencies
 
-### To Uninstall
-**Delete the instances (CRs) from the cluster:**
+Check the status of your service dependencies:
 
-```sh
-kubectl delete -k config/samples/
+```bash
+kubectl get sd example-servicedependency -o yaml
 ```
 
-**Delete the APIs(CRDs) from the cluster:**
-
-```sh
-make uninstall
-```
-
-**UnDeploy the controller from the cluster:**
-
-```sh
-make undeploy
-```
+This will display the current status of the dependencies, indicating whether they are ready and any additional messages.
 
 ## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
 
-**NOTE:** Run `make help` for more information on all potential `make` targets
+Contributions are welcome! Please read our contributing guidelines located in `CONTRIBUTING.md` to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to the project.
 
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
 
-## License
+## Support
 
-Copyright 2024.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
+If you have any issues or need help, please submit an issue to the project's issue tracker.
