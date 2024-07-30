@@ -1,0 +1,44 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: service-dependencies-operator-role
+rules:
+- apiGroups:
+  - io.io.com
+  resources:
+  - servicedependencies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - io.io.com
+  resources:
+  - servicedependencies/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - io.io.com
+  resources:
+  - servicedependencies/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch

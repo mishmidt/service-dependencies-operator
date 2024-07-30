@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-dependencies-operator
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: service-dependencies-operator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: service-dependencies-operator
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        app.kubernetes.io/name: service-dependencies-operator
+    spec:
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - command:
+            - /manager
+          args:
+            - --leader-elect
+          image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}'
+          name: service-dependencies-operator
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - "ALL"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources: 
+            {{- toYaml .Values.resources | nindent 12 }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default "service-dependencies-operator"}}
+      terminationGracePeriodSeconds: 10
