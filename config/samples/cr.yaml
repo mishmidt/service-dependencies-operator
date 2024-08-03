@@ -1,4 +1,4 @@
-apiVersion: io.com/v1
+apiVersion: io.io.com/v1
 kind: ServiceDependency
 metadata:
   name: example-service-dependency
